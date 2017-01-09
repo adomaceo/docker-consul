@@ -1,4 +1,4 @@
-FROM Debian
+FROM debian
 MAINTAINER Adonys Maceo <adomaceo@yahoo.es> (@adomaceo)
 
 # This is the release of Consul to pull in.
@@ -11,12 +11,12 @@ ENV DOCKER_BASE_VERSION=0.0.4
 # Create a consul user and group first so the IDs get set the same way, even as
 # the rest of this may change over time.
 RUN addgroup consul && \
-    adduser -S -G consul consul
+    adduser --system --home /consul consul
 
 # Set up certificates, our base tools, and Consul.
 RUN apt-get update && \
-    apt-get install -y ca-certificates curl gnupg openssl tzdata wget unzip && \
-    gpg --recv-keys 91A6E7F85D05C65630BEF18951852D87348FFC4C && \
+    apt-get install --no-install-recommends -y ca-certificates curl gnupg openssl tzdata wget unzip && \
+    gpg --keyserver keys.gnupg.net --recv-keys 91A6E7F85D05C65630BEF18951852D87348FFC4C && \
     mkdir -p /tmp/build && \
     cd /tmp/build && \
     wget https://releases.hashicorp.com/docker-base/${DOCKER_BASE_VERSION}/docker-base_${DOCKER_BASE_VERSION}_linux_amd64.zip && \
@@ -33,8 +33,8 @@ RUN apt-get update && \
     grep consul_${CONSUL_VERSION}_linux_amd64.zip consul_${CONSUL_VERSION}_SHA256SUMS | sha256sum -c && \
     unzip -d /bin consul_${CONSUL_VERSION}_linux_amd64.zip && \
     cd /tmp && \
-    rm -rf /tmp/build && \
-    rm -rf /root/.gnupg
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/build /root/.gnupg
 
 # The /consul/data dir is used by Consul to store state. The agent will be started
 # with /consul/config as the configuration directory so you can add additional

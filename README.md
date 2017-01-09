@@ -1,6 +1,6 @@
 # About this Repo
 
-This is a fork of [official image](https://docs.docker.com/docker-hub/official_repos/) using debian as a Base.
+This is a fork of Consul [official image](https://docs.docker.com/docker-hub/official_repos/) using Debian as a Base.
 
 The full readme is generated over in [docker-library/docs](https://github.com/docker-library/docs), specificially in [docker-library/docs/consul](https://github.com/docker-library/docs/tree/master/consul).
 
