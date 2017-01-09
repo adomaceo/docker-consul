@@ -1,5 +1,5 @@
-FROM alpine:3.4
-MAINTAINER James Phillips <james@hashicorp.com> (@slackpad)
+FROM Debian
+MAINTAINER Adonys Maceo <adomaceo@yahoo.es> (@adomaceo)
 
 # This is the release of Consul to pull in.
 ENV CONSUL_VERSION=0.7.2
@@ -14,7 +14,8 @@ RUN addgroup consul && \
     adduser -S -G consul consul
 
 # Set up certificates, our base tools, and Consul.
-RUN apk add --no-cache ca-certificates curl gnupg libcap openssl && \
+RUN apt-get update && \
+    apt-get install -y ca-certificates curl gnupg openssl tzdata wget unzip && \
     gpg --recv-keys 91A6E7F85D05C65630BEF18951852D87348FFC4C && \
     mkdir -p /tmp/build && \
     cd /tmp/build && \
@@ -33,7 +34,6 @@ RUN apk add --no-cache ca-certificates curl gnupg libcap openssl && \
     unzip -d /bin consul_${CONSUL_VERSION}_linux_amd64.zip && \
     cd /tmp && \
     rm -rf /tmp/build && \
-    apk del gnupg openssl && \
     rm -rf /root/.gnupg
 
 # The /consul/data dir is used by Consul to store state. The agent will be started
