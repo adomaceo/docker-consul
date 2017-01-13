@@ -6,6 +6,17 @@ set -e
 # wouldn't do either of these functions so we'd leak zombies as well as do
 # unclean termination of all our sub-processes.
 
+# Set the timezone.
+if [ -z $TIMEZONE ]; then
+    echo "Container timezone not set"
+elif [ -f /usr/share/zoneinfo/${TIMEZONE} ]; then
+    echo ${TIMEZONE} >/etc/timezone && \
+    dpkg-reconfigure -f noninteractive tzdata
+	echo "Container timezone set to: $TIMEZONE"
+else
+    echo "The time zone: $TIMEZONE does not exist."
+fi
+
 # You can set CONSUL_BIND_INTERFACE to the name of the interface you'd like to
 # bind to and this will look up the IP and pass the proper -bind= option along
 # to Consul.
